@@ -1,0 +1,26 @@
+name: Run commitlint
+
+on: [pull_request]
+
+jobs:
+  commitlint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: aquaproj/aqua-installer@v2.0.2
+        with:
+          aqua_version: v1.32.0
+
+      - name: Run github-comment hide
+        run: github-comment hide
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+
+      - name: Configure commitlint to use conventional config
+        run: |
+          echo "module.exports = { extends: ['@commitlint/config-conventional'] };" > commitlint.config.js
+      - name: Validate all commits from PR
+        run: github-comment exec -- npx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose

@@ -2,11 +2,16 @@ name: Run commitlint
 
 on: [pull_request]
 
+env:
+  GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
 jobs:
   commitlint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - uses: aquaproj/aqua-installer@v2.0.2
         with:
           aqua_version: v1.32.0
@@ -21,6 +26,7 @@ jobs:
 
       - name: Configure commitlint to use conventional config
         run: |
+          npm install --save-dev @commitlint/config-conventional
           echo "module.exports = { extends: ['@commitlint/config-conventional'] };" > commitlint.config.js
       - name: Validate all commits from PR
         run: github-comment exec -- npx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose

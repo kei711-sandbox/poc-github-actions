@@ -6,6 +6,8 @@ on:
 jobs:
   job1:
     runs-on: ubuntu-latest
+    outputs:
+      filter_outputs: ${{ steps.filter.outputs }}
     steps:
       - uses: actions/checkout@v3
       - uses: dorny/paths-filter@v2
@@ -25,3 +27,12 @@ jobs:
       - name: both
         if: steps.filter.outputs.target == 'true' && steps.filter.outputs.others == 'true'
         run: echo "test 2-3"
+
+  job2:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo ${{ needs.job1.outputs.filter_outputs }}
+          echo ${{ needs.job1.outputs.filter_outputs.target }}
+          echo ${{ needs.job1.outputs.filter_outputs.others }}
+

@@ -1,0 +1,27 @@
+name: Test 2
+
+on:
+  pull_request:
+
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            target:
+              - 'apps/**/README.md'
+            others:
+              - '!apps/**/README.md'
+      - name: target only
+        if: steps.filter.outputs.target == 'true' && steps.filter.outputs.others != 'true'
+        run: echo "test 2-1"
+      - name: others only
+        if: steps.filter.outputs.target != 'true' && steps.filter.outputs.others == 'true'
+        run: echo "test 2-2"
+      - name: both
+        if: steps.filter.outputs.target == 'true' && steps.filter.outputs.others == 'true'
+        run: echo "test 2-3"

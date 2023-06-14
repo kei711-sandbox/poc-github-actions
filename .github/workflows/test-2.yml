@@ -31,8 +31,6 @@ jobs:
   job2:
     runs-on: ubuntu-latest
     needs: job1
-    env:
-      filter_outputs: ${{ fromJson(needs.job1.outputs.filter_outputs) }}
     steps:
       - run: |
           echo ${{ needs.job1.outputs.filter_outputs }}
@@ -40,6 +38,4 @@ jobs:
           echo ${{ needs.job1.outputs.filter_outputs.target }}
           echo "---"
           echo ${{ needs.job1.outputs.filter_outputs.others }}
-          echo "---"
-          echo ${{ env.filter_outputs }}
 

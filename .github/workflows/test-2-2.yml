@@ -2,10 +2,6 @@ name: Test 2-2
 
 on:
   pull_request:
-    types:
-      - opened
-    branches:
-      - main
     paths:
       - 'apps/app-1/README.md'
       - '!**'

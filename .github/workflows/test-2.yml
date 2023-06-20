@@ -22,8 +22,8 @@ jobs:
               - 'apps/**/README.md'
               - '!**'
             others2:
-              - '!apps/**/README.md'
               - '**'
+              - '!apps/**/README.md'
       - name: target only
         if: steps.filter.outputs.target == 'true' && steps.filter.outputs.others != 'true'
         run: echo "test 2-1"

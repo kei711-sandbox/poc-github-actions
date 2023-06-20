@@ -6,6 +6,8 @@ on:
 jobs:
   job1:
     runs-on: ubuntu-latest
+    outputs:
+      filter_outputs: ${{ toJson(steps.filter.outputs) }}
     steps:
       - uses: actions/checkout@v3
       - uses: dorny/paths-filter@v2
@@ -16,6 +18,12 @@ jobs:
               - 'apps/**/README.md'
             others:
               - '!apps/**/README.md'
+            target2:
+              - 'apps/**/README.md'
+              - '!**'
+            others2:
+              - '!apps/**/README.md'
+              - '**'
       - name: target only
         if: steps.filter.outputs.target == 'true' && steps.filter.outputs.others != 'true'
         run: echo "test 2-1"
@@ -25,3 +33,25 @@ jobs:
       - name: both
         if: steps.filter.outputs.target == 'true' && steps.filter.outputs.others == 'true'
         run: echo "test 2-3"
+      - name: target only
+        if: steps.filter.outputs.target2 == 'true'
+        run: echo "test 2-4"
+      - name: others only
+        if: steps.filter.outputs.others2 == 'true'
+        run: echo "test 2-5"
+
+  job2:
+    runs-on: ubuntu-latest
+    needs: job1
+    steps:
+      - run: |
+          echo '${{ needs.job1.outputs.filter_outputs }}'
+          echo '---'
+          echo '${{ fromJson(needs.job1.outputs.filter_outputs).target }}'
+          echo '---'
+          echo '${{ fromJson(needs.job1.outputs.filter_outputs).others }}'
+          echo '---'
+          echo '${{ fromJson(needs.job1.outputs.filter_outputs).target2 }}'
+          echo '---'
+          echo '${{ fromJson(needs.job1.outputs.filter_outputs).others2 }}'
+

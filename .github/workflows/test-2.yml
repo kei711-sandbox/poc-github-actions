@@ -33,12 +33,16 @@ jobs:
       - name: both
         if: steps.filter.outputs.target == 'true' && steps.filter.outputs.others == 'true'
         run: echo "test 2-3"
-      - name: target only
+      - name: target2
         if: steps.filter.outputs.target2 == 'true'
         run: echo "test 2-4"
-      - name: others only
+      - name: others2
         if: steps.filter.outputs.others2 == 'true'
         run: echo "test 2-5"
+      - name: changes length
+        run: |
+          len=$(echo ${{ steps.filter.outputs.changes }} | jq '. | length')
+          echo ${len}
 
   job2:
     runs-on: ubuntu-latest

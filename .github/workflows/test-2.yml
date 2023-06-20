@@ -41,7 +41,7 @@ jobs:
         run: echo "test 2-5"
       - name: changes length
         run: |
-          len=$(echo ${{ steps.filter.outputs.changes }} | jq '. | length')
+          len=$(echo '${{ steps.filter.outputs.changes }}' | jq '. | length')
           echo ${len}
 
   job2:
